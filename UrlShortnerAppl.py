@@ -1,10 +1,10 @@
 import sqlite3
+con = sqlite3.connect("app.db")
 
 class URLShortnerApp:
 
     id=100000000000
     urls_list = {}
-    con = sqlite3.connect("app.db")
     cursor = con.execute(''' SELECT url,shorturl,id from urldb;''')
     c=0
     for i in cursor:
@@ -41,9 +41,7 @@ shortner= URLShortnerApp()
 a = input("Enter your url: ")
 print(shortner.short_url(a))
 
-
-conn = sqlite3.connect("app.db")
-var = conn.execute(''' SELECT url,shorturl,id from urldb;''')
+var = con.execute(''' SELECT url,shorturl,id from urldb;''')
 count = 1
 for i in var:
     
@@ -58,8 +56,8 @@ for i in var:
               VALUES(?,?,?) '''
 
         data = (shortner.urls_list[a],a,shortner.short_url(a))
-        cur = conn.cursor()
+        cur = con.cursor()
         cur.execute(insert, data)
-        conn.commit()   
+        con.commit()   
         break
-conn.close()
+con.close()
