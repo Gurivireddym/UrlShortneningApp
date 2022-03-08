@@ -11,7 +11,7 @@ class URLShortnerApp:
         urls_list[i[0]] = i[2]
         id = i[2]
         c += 1
-    id +=1
+    id += 1
     def ShortURL(self,original_url):
         
         if original_url in self.urls_list:
