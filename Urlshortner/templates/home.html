@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title%}Home Page{% endblock %}
+{% block content %}
+<form action="#" method="post">
+<table align="center" border="5" callspan="2" cellpaddling="3" bgcolor="liteyellow">
+<caption >URLShortner</caption>
+<tr><td>URL:</td>
+<td><input rows="5" cols="20" name="URL" required placeholder="Enter your URL here..."/>
+</td>
+</tr><br>
+<tr align="center"><td><input  type="reset" name="reset"/></td>
+<td align="center"><input type="submit" value = "submit" name="submit" cellpadding="3"/></td>
+</tr>
+</table>
+</form>
+{% endblock %}
