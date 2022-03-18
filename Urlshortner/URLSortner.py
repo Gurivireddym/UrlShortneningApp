@@ -28,7 +28,7 @@ def ShortUrl():
     data = []
     while id > 0:
         var = id % base
-        data.append(var)
+        data.append(char[var])
         id = id // base
     return data[::-1]
 
