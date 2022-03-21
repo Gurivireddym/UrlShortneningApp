@@ -30,6 +30,10 @@ def ShortUrl():
         var = id % base
         data.append(char[var])
         id = id // base
+
+    else: 
+        id +=1
+        
     return data[::-1]
 
 @app.route("/", methods = ["POST","GET"])
@@ -38,6 +42,7 @@ def home():
         longurl = request.form["URL"]
         
         found_url = Urltable.query.filter_by(longurl = longurl).first()
+
         if found_url:
             return redirect(url_for("display",url1 = found_url.shorturl))
         else:
@@ -49,10 +54,7 @@ def home():
             db.session.commit()
             
             return redirect(url_for("display",url1 = shorturl))
-        
-        
     else:
-        
         return  render_template("home.html")
     
 
