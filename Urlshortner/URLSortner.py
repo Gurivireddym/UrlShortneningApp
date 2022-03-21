@@ -30,10 +30,9 @@ def ShortUrl():
         var = id % base
         data.append(char[var])
         id = id // base
-
     else: 
         id +=1
-        
+
     return data[::-1]
 
 @app.route("/", methods = ["POST","GET"])
