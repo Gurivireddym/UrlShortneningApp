@@ -1,19 +1,22 @@
 
-
 from flask import render_template, request,redirect, Flask, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
 app.config["SECRET_KEY"] = 'hello'
 app.config["SQLACHEMY_DATABASE_URI"] = 'sqlite:///app.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
-            
+session = db.session()
+id = 10
+          
 class Urltable(db.Model):
+
    id = db.Column('id', db.Integer, primary_key = True)
    longurl = db.Column(db.String(100))
-   shorturl = db.Column(db.String(50))  
+   shorturl = db.Column(db.String(50), unique = True)  
    
 
    def __init__(self, longurl, shorturl):
@@ -22,7 +25,6 @@ class Urltable(db.Model):
         
         
 def ShortUrl():
-    id = 10
     char = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     base = len(char)
     data = []
@@ -30,9 +32,10 @@ def ShortUrl():
         var = id % base
         data.append(char[var])
         id = id // base
+
     else: 
         id +=1
-
+        
     return data[::-1]
 
 @app.route("/", methods = ["POST","GET"])
@@ -47,8 +50,7 @@ def home():
         else:
             
             shorturl = ShortUrl()
-            print(shorturl)
-            new_url = Urltable(longurl,shorturl)
+            new_url = Urltable(longurl = longurl,shorturl = shorturl)
             db.session.add(new_url)
             db.session.commit()
             
