@@ -9,8 +9,8 @@ app.config["SQLACHEMY_DATABASE_URI"] = 'sqlite:///app.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+session = db.session()
 
-id = 10
           
 class Urltable(db.Model):
 
@@ -25,12 +25,13 @@ class Urltable(db.Model):
         
         
 def ShortUrl():
+    id = 10
     char = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     base = len(char)
-    data = []
+    data = str()
     while id > 0:
         var = id % base
-        data.append(char[var])
+        data = data + char[var]
         id = id // base
 
     else: 
