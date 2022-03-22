@@ -1,63 +1,78 @@
-import sqlite3
-con = sqlite3.connect("app.db")
 
-class URLShortnerApp:
+from flask import render_template, request,redirect, Flask, url_for
+from flask_sqlalchemy import SQLAlchemy
 
-    id = 100000000000
-    urls_list = {}
-    cursor = con.execute(''' SELECT url,shorturl,id from urldb;''')
-    c = 0
-    for i in cursor:
-        urls_list[i[0]] = i[2]
-        id = i[2]
-        c += 1
-    id += 1
-    def ShortURL(self,original_url):
+app = Flask(__name__)
+
+app.config["SECRET_KEY"] = 'hello'
+app.config["SQLACHEMY_DATABASE_URI"] = 'sqlite:///app.sqlite3'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+class Urltable(db.Model):
+
+   id = db.Column('id', db.Integer, primary_key = True)
+   longurl = db.Column(db.String(100))
+   shorturl = db.Column(db.String(50), unique = True)  
+   
+
+   def __init__(self, longurl, shorturl):
+        self.longurl = longurl
+        self.shorturl = shorturl
         
-        if original_url in self.urls_list:
-            id = self.urls_list[original_url]
-            shorten_url = self.IdRange(id)
         
+def ShortUrl():
+    id = 10
+    for i in Urltable.query.all():
+        if i == id:
+            pass
         else:
-            self.urls_list[original_url] = self.id
-            shorten_url = self.IdRange(self.id)
-            self.id += 1
+            id += 1
+    char = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    base = len(char)
+    data = str()
+    while id > 0:
+        var = id % base
+        data = data + char[var]
+        id = id // base
+
+    else: 
+        id +=1
         
-        return "shorten_url/"+ shorten_url
+    return data[::-1]
+
+@app.route("/", methods = ["POST","GET"])
+def home():
+    if request.method == "POST":
+        longurl = request.form["URL"]
         
+        found_url = Urltable.query.filter_by(longurl = longurl).first()
 
-    def IdRange(self,id):
-        char = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        base = len(char)
-        data = []
-        while id > 0:
-            val = id % base
-            data.append(char[val])
-            id = id // base
-        return "".join(data[::-1])
-
-shortner = URLShortnerApp()
-
-a = input("Enter your url: ")
-print(shortner.ShortURL(a))
-
-var = con.execute(''' SELECT url,shorturl,id from urldb;''')
-count = 1
-for i in var:
-    
-    if (shortner.urls_list[i[0]] == shortner.urls_list[a]):
-        print("Entered URL is already available in database..")
-        print("your shorten url is: ",i[1])
-        break
-    elif(count < shortner.c):
-        count += 1
+        if found_url:
+            return redirect(url_for("display",url1 = found_url.shorturl))
+        else:
+            
+            shorturl = ShortUrl()
+            new_url = Urltable(longurl = longurl,shorturl = shorturl)
+            db.session.add(new_url)
+            db.session.commit()
+            
+            return redirect(url_for("display",url1 = str(shorturl)))
     else:
-        insert = ''' INSERT INTO urldb(id,url,shorturl)
-              VALUES(?,?,?) '''
+        return  render_template("home.html")
+    
 
-        data = (shortner.urls_list[a],a,shortner.ShortURL(a))
-        cur = con.cursor()
-        cur.execute(insert, data)
-        con.commit()   
-        break
-con.close()
+@app.route("/display/<url1>")
+def display(url1):
+    
+    return render_template("shorturl.html", shorturl = url1 )
+
+@app.route("/all_urls")
+def displayall():
+    return render_template("all_urls.html", vals = Urltable.query.all())
+    
+if __name__ == "__main__":
+    db.create_all()
+    app.run(port = 10, debug = True)
+            
