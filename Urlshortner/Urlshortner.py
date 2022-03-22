@@ -9,8 +9,6 @@ app.config["SQLACHEMY_DATABASE_URI"] = 'sqlite:///app.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
-session = db.session()
-
           
 class Urltable(db.Model):
 
