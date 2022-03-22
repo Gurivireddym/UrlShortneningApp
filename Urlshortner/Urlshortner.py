@@ -9,6 +9,8 @@ app.config["SQLACHEMY_DATABASE_URI"] = 'sqlite:///app.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+
+
           
 class Urltable(db.Model):
 
@@ -53,14 +55,15 @@ def home():
             db.session.add(new_url)
             db.session.commit()
             
-            return redirect(url_for("display",url1 = shorturl))
+            return redirect(url_for("display",url1 = str(shorturl)))
     else:
         return  render_template("home.html")
     
 
-@app.route("/display/<url>")
+@app.route("/display/<url1>")
 def display(url1):
-   return render_template("shorturl.html", shorturl = url1)
+    
+    return render_template("shorturl.html", shorturl = url1 )
 
 @app.route("/all_urls")
 def displayall():
