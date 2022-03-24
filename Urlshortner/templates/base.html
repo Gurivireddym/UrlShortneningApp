@@ -1,9 +1,12 @@
 <html>
-<head>
-<tilte>{% block title %}
-{% endblock %}</title>
+<head><center><b>
+<tilte align = "center">
+    {% block title %}
+{% endblock %}</tilte></b></center>
 </head>
-<body><div>
+<body><div><a href="http://127.0.0.1:10/"onclick = "home.html">&nbsp;homepage&emsp;</a>
+<a href="http://127.0.0.1:10/all_urls">&nbsp;All Urls&emsp;</a></div>
+    <div>
 {% block content %}
 {% endblock %}
 </div>
