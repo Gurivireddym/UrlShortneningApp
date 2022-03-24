@@ -2,7 +2,7 @@
 This is a simple flask app which takes an URL and shortens it in a sequence of combination of numbers and letters.
 
 # Getting started
- Clone this repo.
+ Clone this repo.\n
  Install python programming language.
  Install any IDE like vscode or pycharm or spyder.
 
