@@ -5,13 +5,11 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = 'hello'
-app.config["SQLACHEMY_DATABASE_URI"] = 'sqlite:///app.sqlite3'
+app.config["SQLACHEMY_DATABASE_URI"] = 'sqlite:///app.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-
-          
 class Urltable(db.Model):
 
    id = db.Column('id', db.Integer, primary_key = True)
@@ -26,6 +24,11 @@ class Urltable(db.Model):
         
 def ShortUrl():
     id = 10
+    for i in Urltable.query.all():
+        if i == id:
+            pass
+        else:
+            id += 1
     char = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     base = len(char)
     data = str()
