@@ -2,11 +2,19 @@
 <head><center><b>
 <tilte align = "center">
     {% block title %}
-{% endblock %}</tilte></b></center>
+{% endblock %}</title></b></center>
 </head>
-<body><div><a href="http://127.0.0.1:10/"onclick = "home.html">&nbsp;homepage&emsp;</a>
-<a href="http://127.0.0.1:10/all_urls">&nbsp;All Urls&emsp;</a></div>
+<div class="w3-container w3-green">
     <div>
+        <ul class="nav navbar-nav">
+            <li><a href="/" id="home">Home</a></li>
+            <li><a href="/all_urls" id="guides">All Urls</a></li>
+            
+        </ul>
+    </div>
+</div>
+<body>
+<div>
 {% block content %}
 {% endblock %}
 </div>
