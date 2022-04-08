@@ -2,7 +2,18 @@
 {% block title %}View all URLS{% endblock %}
 
 {% block content %}
+<table align="center" border="2" callspan="2" cellpaddling="3" bgcolor="orange">
+    <center>UrlShortner</center>
+    <tr>
+    <td><b>Longurl</b></td>
+    <td><b>ShortUrl</b></td>
+    </tr>
+
     {% for url in vals %}
-        <p><strong>Short:</strong>{{url.short}} <strong>Long:</strong> {{url.long}}</p>
+        <tr>
+            <td>{{url.longurl}}</td>
+            <td>{{url.shorturl}}</td>
+        </tr>
     {% endfor %}
+</table>
 {% endblock %}
