@@ -1,78 +1,61 @@
-
-from flask import render_template, request,redirect, Flask, url_for
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, redirect , render_template, request, session, flash, url_for
+from datetime import timedelta
 
 app = Flask(__name__)
+app.secret_key = "hello"
+app.permanent_session_lifetime = timedelta(minutes = 5)
 
-app.config["SECRET_KEY"] = 'hello'
-app.config["SQLACHEMY_DATABASE_URI"] = 'sqlite:///app.sqlite3'
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
 
-class Urltable(db.Model):
+@app.route("/")
+def home():
+	
+	return render_template("index.html")
 
-   id = db.Column('id', db.Integer, primary_key = True)
-   longurl = db.Column(db.String(100))
-   shorturl = db.Column(db.String(50), unique = True)  
-   
 
-   def __init__(self, longurl, shorturl):
-        self.longurl = longurl
-        self.shorturl = shorturl
-        
-        
-def ShortUrl():
-    id = 10
-    for i in Urltable.query.all():
-        if i == id:
-            pass
-        else:
-            id += 1
+@app.route("/originalurl", methods = ['POST','GET'])
+def Original():
+	if request.method == 'POST':
+		session.parmanent = True
+		OUrl = request.form["URL"]
+		session["OriginalUrl"] = redirect
+		
+		flash("login successfully")
+		return redirect(url_for("ShortUrl"))
+	else:
+		if "OriginalUrl" in session:
+			flash("already login")
+			return redirect(url_for("ShortURL"))
+			
+		return render_template("login.html")
+
+@app.route("/user", methods = ["POST","GET"])
+def ShortURL():
+	if "OriginalUrl" in session:
+		OriginalUrl = session["OriginalUrl"]
+		
+		return redirect(url_for("IdRange",id = 10))
+	else:
+		flash("you are not logged in")
+		return redirect(url_for("IdRange",id = 10))
+
+@app.route("/Idrange")
+def IdRange(id):
+	
     char = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     base = len(char)
-    data = str()
+    data = []
+	
+    temp = id
     while id > 0:
-        var = id % base
-        data = data + char[var]
+        val = id % base
+        data.append(char[val])
         id = id // base
+    id = temp + 1
+    return "".join(data[::-1])
 
-    else: 
-        id +=1
-        
-    return data[::-1]
 
-@app.route("/", methods = ["POST","GET"])
-def home():
-    if request.method == "POST":
-        longurl = request.form["URL"]
-        
-        found_url = Urltable.query.filter_by(longurl = longurl).first()
-
-        if found_url:
-            return redirect(url_for("display",url1 = found_url.shorturl))
-        else:
-            
-            shorturl = ShortUrl()
-            new_url = Urltable(longurl = longurl,shorturl = shorturl)
-            db.session.add(new_url)
-            db.session.commit()
-            
-            return redirect(url_for("display",url1 = str(shorturl)))
-    else:
-        return  render_template("home.html")
-    
-
-@app.route("/display/<url1>")
-def display(url1):
-    
-    return render_template("shorturl.html", shorturl = url1 )
-
-@app.route("/all_urls")
-def displayall():
-    return render_template("all_urls.html", vals = Urltable.query.all())
-    
 if __name__ == "__main__":
-    db.create_all()
-    app.run(port = 10, debug = True)
-            
+	app.run(port = 2001, debug = True)
+
+
