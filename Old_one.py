@@ -39,7 +39,10 @@ class URLShortnerApp:
 shortner = URLShortnerApp()
 
 a = input("Enter your url: ")
-print(shortner.ShortURL(a))
+if (re.findall("www\.+[a-zA-Z0-9]+\.[a-zA-Z0-9]{2,}$",a):
+    print(shortner.ShortURL(a))
+else:
+    print("Entered email is empty or invalid.")
 
 var = con.execute(''' SELECT url,shorturl,id from urldb;''')
 count = 1
